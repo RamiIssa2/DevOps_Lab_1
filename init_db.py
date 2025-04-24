@@ -10,12 +10,13 @@ def create_db():
 
     # Create table
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS tasks (
+    CREATE TABLE tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT NOT NULL,
-        status TEXT NOT NULL CHECK (status IN ('pending', 'completed'))
-    )
+        status TEXT NOT NULL CHECK (status IN ('pending', 'completed')),
+        priority TEXT NOT NULL DEFAULT 'Medium'
+    );
     ''')
 
     # Commit changes and close connection
