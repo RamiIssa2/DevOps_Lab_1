@@ -35,18 +35,22 @@ def create_task():
     title = data.get('title')
     description = data.get('description')
     status = data.get('status', 'pending')
+    priority = data.get('priority', 'Medium')
 
     if not title or not description:
         return jsonify({'error': 'Title and description are required'}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO tasks (title, description, status) VALUES (?, ?, ?)',
-                   (title, description, status))
+    conn.execute(
+        'INSERT INTO tasks (title, description, status, priority) VALUES (?, ?, ?, ?)',
+        (title, description, status, priority)
+    )
     conn.commit()
     task_id = cursor.lastrowid
     conn.close()
-    return jsonify({'id': task_id, 'title': title, 'description': description, 'status': status}), 201
+    return jsonify({'id': task_id, 'title': title, 'description': description,
+                    'status': status, 'priority': priority}), 201
 
 
 @app.route('/tasks/<int:id>', methods=['PUT'])
@@ -55,14 +59,15 @@ def update_task(id):
     title = data.get('title')
     description = data.get('description')
     status = data.get('status')
+    priority = data.get('priority', 'Medium')
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?',
-                   (title, description, status, id))
+    cursor.execute('UPDATE tasks SET title = ?, description = ?, status = ?, priority = ? WHERE id = ?',
+                   (title, description, status, priority, id))
     conn.commit()
     conn.close()
-    return jsonify({'id': id, 'title': title, 'description': description, 'status': status})
+    return jsonify({'id': id, 'title': title, 'description': description, 'status': status, 'priority': priority})
 
 
 @app.route('/tasks/<int:id>', methods=['DELETE'])
