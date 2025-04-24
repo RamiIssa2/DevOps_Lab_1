@@ -1,3 +1,4 @@
+from transformers import pipeline
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -6,6 +7,12 @@ import sqlite3
 app = Flask(__name__)
 CORS(app)
 DB_FILE = 'tasks.db'
+
+# Loading zero-shot classification pipeline (once)
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+# Defining priority levels
+PRIORITY_LABELS = ["High", "Medium", "Low"]
 
 
 def get_db_connection():
@@ -38,7 +45,13 @@ def create_task():
     title = data.get('title')
     description = data.get('description')
     status = data.get('status', 'pending')
-    priority = data.get('priority', 'Medium')
+
+    full_text = f"{title}. {description}"
+    # Predict priority using zero-shot model
+    result = classifier(full_text, PRIORITY_LABELS)
+    predicted_priority = result['labels'][0]  # Top label
+
+    priority = data.get('priority', predicted_priority)
 
     if not title or not description:
         return jsonify({'error': 'Title and description are required'}), 400
