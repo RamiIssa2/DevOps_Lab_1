@@ -80,5 +80,5 @@ def delete_task(id):
     return jsonify({'message': f'Task {id} deleted.'})
 
 
-def run_app():
+if __name__ == '__main__':
     app.run(debug=True)
