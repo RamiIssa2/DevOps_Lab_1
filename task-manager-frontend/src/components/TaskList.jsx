@@ -13,16 +13,36 @@ export default function TaskList() {
     fetchTasks();
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      await API.delete(`/tasks/${id}`);
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (err) {
+      console.error('Delete failed:', err);
+    }
+  };
+
   return (
     <div>
       <h2>Task List</h2>
-      <ul>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Delete</th>
+        </tr>
         {tasks.map(task => (
-          <li key={task.id}>
-            <strong>{task.title}</strong> — {task.description} — <em>{task.priority}</em>
-          </li>
+          <tr key={task.id}>
+            <td>{task.title}</td>
+            <td>{task.description}</td>
+            <td>{task.priority}</td>
+            <td class="delete_td">
+              <button onClick={() => handleDelete(task.id)}>Delete</button>
+            </td>
+          </tr>
         ))}
-      </ul>
+      </table>
     </div>
   );
 }
