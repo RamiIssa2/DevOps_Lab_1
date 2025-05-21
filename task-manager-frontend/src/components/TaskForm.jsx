@@ -15,8 +15,14 @@ export default function TaskForm({ onTaskCreated }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-      <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+      <div class="title_input">
+        <label for="title">Title:</label>
+        <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
+      </div>
+      <div class="description_input">
+        <label for="description">Description:</label>
+        <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+      </div>
       <button type="submit">Add Task</button>
     </form>
   );

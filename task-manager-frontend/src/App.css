@@ -1,3 +1,7 @@
+div {
+    padding-left: 5px;
+}
+
 table {
     width:50%
 }
@@ -13,4 +17,36 @@ table, th, td {
 
 table td {
   padding-left: 10px;;
+}
+
+.title_input {
+    width:25%;
+    padding: 10px 0px 10px 0px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title_input label {
+    padding: 0px 10px 0px 10px;
+}
+
+.title_input input {
+    width:75%;
+}
+
+.description_input {
+    width:25%;
+    padding: 10px 0px 10px 0px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.description_input label {
+    padding: 0px 10px 0px 10px;
+}
+
+.description_input textarea {
+    width:62%;
 }
