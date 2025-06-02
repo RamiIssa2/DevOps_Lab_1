@@ -3,6 +3,9 @@ import API from '../api';
 
 export default function TaskList() {
   const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedDescription, setUpdatedDescription] = useState('');
 
   const fetchTasks = async () => {
     const res = await API.get('/tasks');
@@ -22,26 +25,71 @@ export default function TaskList() {
     }
   };
 
+  const handleEditClick = (task) => {
+    setEditingTask(task.id);
+    setUpdatedTitle(task.title);
+    setUpdatedDescription(task.description);
+  };
+
+  const handleUpdate = async (id) => {
+    try {
+      // Fetch the original task so we keep existing values
+      const originalTask = tasks.find(task => task.id === id);
+
+      const res = await API.put(`/tasks/${id}`, {
+        title: updatedTitle,
+        description: updatedDescription,
+        status: originalTask.status || 'pending',
+        priority: originalTask.priority || 'Medium'
+      });
+      setTasks(tasks.map(task => task.id === id ? res.data : task));
+      setEditingTask(null);
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+  };
+
   return (
     <div>
       <h2>Task List</h2>
       <table>
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Priority</th>
-          <th>Delete</th>
-        </tr>
-        {tasks.map(task => (
-          <tr key={task.id}>
-            <td>{task.title}</td>
-            <td>{task.description}</td>
-            <td>{task.priority}</td>
-            <td class="delete_td">
-              <button onClick={() => handleDelete(task.id)}>Delete</button>
-            </td>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Actions</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {tasks.map(task => (
+            <tr key={task.id}>
+              <td>
+                {editingTask === task.id ? (
+                  <input value={updatedTitle} onChange={e => setUpdatedTitle(e.target.value)} />
+                ) : (
+                  task.title
+                )}
+              </td>
+              <td>
+                {editingTask === task.id ? (
+                  <textarea value={updatedDescription} onChange={e => setUpdatedDescription(e.target.value)} />
+                ) : (
+                  task.description
+                )}
+              </td>
+              <td>{task.priority}</td>
+              <td>
+                {editingTask === task.id ? (
+                  <button onClick={() => handleUpdate(task.id)}>Save</button>
+                ) : (
+                  <button onClick={() => handleEditClick(task)}>Edit</button>
+                )}
+                <button onClick={() => handleDelete(task.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );

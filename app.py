@@ -72,17 +72,25 @@ def create_task():
 @app.route('/tasks/<int:id>', methods=['PUT'])
 def update_task(id):
     data = request.get_json()
-    title = data.get('title')
-    description = data.get('description')
-    status = data.get('status')
-    priority = data.get('priority', 'Medium')
-
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Fetch current task to preserve unchanged fields
+    existing = conn.execute('SELECT * FROM tasks WHERE id = ?', (id,)).fetchone()
+    if not existing:
+        conn.close()
+        return jsonify({'error': 'Task not found'}), 404
+
+    title = data.get('title', existing['title'])
+    description = data.get('description', existing['description'])
+    status = data.get('status', existing['status'])
+    priority = data.get('priority', existing['priority'])
+
     cursor.execute('UPDATE tasks SET title = ?, description = ?, status = ?, priority = ? WHERE id = ?',
                    (title, description, status, priority, id))
     conn.commit()
     conn.close()
+
     return jsonify({'id': id, 'title': title, 'description': description, 'status': status, 'priority': priority})
 
 
