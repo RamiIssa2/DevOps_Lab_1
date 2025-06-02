@@ -6,6 +6,7 @@ export default function TaskList() {
   const [editingTask, setEditingTask] = useState(null);
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedDescription, setUpdatedDescription] = useState('');
+  const [updatedStatus, setUpdatedStatus] = useState('');
 
   const fetchTasks = async () => {
     const res = await API.get('/tasks');
@@ -29,6 +30,7 @@ export default function TaskList() {
     setEditingTask(task.id);
     setUpdatedTitle(task.title);
     setUpdatedDescription(task.description);
+    setUpdatedStatus(task.status);
   };
 
   const handleUpdate = async (id) => {
@@ -39,7 +41,7 @@ export default function TaskList() {
       const res = await API.put(`/tasks/${id}`, {
         title: updatedTitle,
         description: updatedDescription,
-        status: originalTask.status || 'pending',
+        status: updatedStatus,
         priority: originalTask.priority || 'Medium'
       });
       setTasks(tasks.map(task => task.id === id ? res.data : task));
@@ -79,7 +81,16 @@ export default function TaskList() {
                   task.description
                 )}
               </td>
-              <td>{task.status}</td>
+              <td>
+                {editingTask === task.id ? (
+                  <select value={updatedStatus} onChange={e => setUpdatedStatus(e.target.value)}>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                ) : (
+                  task.status
+                )}
+              </td>
               <td>{task.priority}</td>
               <td>
                 {editingTask === task.id ? (
