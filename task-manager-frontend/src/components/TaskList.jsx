@@ -57,6 +57,7 @@ export default function TaskList() {
           <tr>
             <th>Title</th>
             <th>Description</th>
+            <th>Status</th>
             <th>Priority</th>
             <th>Actions</th>
           </tr>
@@ -78,6 +79,7 @@ export default function TaskList() {
                   task.description
                 )}
               </td>
+              <td>{task.status}</td>
               <td>{task.priority}</td>
               <td>
                 {editingTask === task.id ? (

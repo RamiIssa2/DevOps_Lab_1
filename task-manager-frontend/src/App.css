@@ -19,7 +19,7 @@ table td {
   padding-left: 10px;;
 }
 
-.title_input {
+.title_input, .description_input, .status_input {
     width:25%;
     padding: 10px 0px 10px 0px;
     display: flex;
@@ -35,18 +35,18 @@ table td {
     width:75%;
 }
 
-.description_input {
-    width:25%;
-    padding: 10px 0px 10px 0px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .description_input label {
     padding: 0px 10px 0px 10px;
 }
 
 .description_input textarea {
     width:62%;
+}
+
+.status_input label {
+    padding: 0px 10px 0px 10px;
+}
+
+.status_input select {
+    width:74%;
 }
