@@ -46,6 +46,9 @@ def create_task():
     description = data.get('description')
     status = data.get('status', 'pending')
 
+    if status not in ['pending', 'completed']:
+        return jsonify({"error": "Invalid status"}), 400
+
     full_text = f"{title}. {description}"
     # Predict priority using zero-shot model
     result = classifier(full_text, PRIORITY_LABELS)
