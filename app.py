@@ -1,6 +1,7 @@
 from transformers import pipeline
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import time
 
 import sqlite3
 
@@ -10,6 +11,12 @@ DB_FILE = 'tasks.db'
 
 # Loading zero-shot classification pipeline (once)
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+# WARM-UP CALL to reduce first-time inference latency
+print("Warming up model...")
+start = time.time()
+_ = classifier("Initial model warm-up", ["High", "Medium", "Low"])
+print(f"Model warmed up in {time.time() - start:.2f} seconds.")
 
 # Defining priority levels
 PRIORITY_LABELS = ["High", "Medium", "Low"]
