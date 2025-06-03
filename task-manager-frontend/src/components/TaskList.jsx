@@ -55,6 +55,13 @@ export default function TaskList() {
     <div>
       <h2>Task List</h2>
       <table>
+        <colgroup>
+          <col style={{ width: '20%' }} />
+          <col style={{ width: '40%' }} />
+          <col style={{ width: '15%' }} />
+          <col style={{ width: '15%' }} />
+          <col style={{ width: '10%' }} />
+        </colgroup>
         <thead>
           <tr>
             <th>Title</th>
@@ -92,13 +99,13 @@ export default function TaskList() {
                 )}
               </td>
               <td>{task.priority}</td>
-              <td>
+              <td class="actions_td">
                 {editingTask === task.id ? (
-                  <button onClick={() => handleUpdate(task.id)}>Save</button>
+                  <button class="save_btn" onClick={() => handleUpdate(task.id)}>Save</button>
                 ) : (
-                  <button onClick={() => handleEditClick(task)}>Edit</button>
+                  <button class="edit_btn" onClick={() => handleEditClick(task)}>Edit</button>
                 )}
-                <button onClick={() => handleDelete(task.id)}>Delete</button>
+                <button class="delete_btn" onClick={() => handleDelete(task.id)}>Delete</button>
               </td>
             </tr>
           ))}
