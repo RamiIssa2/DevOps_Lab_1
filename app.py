@@ -2,12 +2,13 @@ from transformers import pipeline
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import time
+import os
 
 import sqlite3
 
 app = Flask(__name__)
 CORS(app)
-DB_FILE = 'tasks.db'
+DB_FILE = os.environ.get("DB_FILE", "tasks.db")
 
 # Loading zero-shot classification pipeline (once)
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
@@ -68,7 +69,7 @@ def create_task():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    conn.execute(
+    cursor.execute(
         'INSERT INTO tasks (title, description, status, priority) VALUES (?, ?, ?, ?)',
         (title, description, status, priority)
     )
