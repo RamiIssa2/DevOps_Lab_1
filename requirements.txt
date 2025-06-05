@@ -1,4 +1,6 @@
+torch==2.2.2
+transformers[torch]==4.38.2
 flask
 flask-cors
-transformers
-torch
+requests
+numpy==1.26.4

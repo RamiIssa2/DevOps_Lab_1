@@ -11,7 +11,12 @@ CORS(app)
 DB_FILE = os.environ.get("DB_FILE", "tasks.db")
 
 # Loading zero-shot classification pipeline (once)
-classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+classifier = pipeline(
+    "zero-shot-classification",
+    model="facebook/bart-large-mnli",
+    cache_dir="/root/.cache/huggingface",
+    local_files_only=True
+)
 
 # WARM-UP CALL to reduce first-time inference latency
 print("Warming up model...")
@@ -116,4 +121,4 @@ def delete_task(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
