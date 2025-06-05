@@ -12,7 +12,7 @@ export default function TaskForm({ onTaskCreated }) {
       alert('Status must be "pending" or "completed".');
       return;
     }
-    const res = await API.post('/tasks', { title, description, status });
+    await API.post('/tasks', { title, description, status });
     setTitle('');
     setDescription('');
     setStatus('pending');
