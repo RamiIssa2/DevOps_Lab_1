@@ -21,16 +21,16 @@ export default function TaskForm({ onTaskCreated }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div class="title_input">
-        <label for="title">Title:</label>
+      <div className="title_input">
+        <label htmlFor="title">Title:</label>
         <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
       </div>
-      <div class="description_input">
-        <label for="description">Description:</label>
+      <div className="description_input">
+        <label htmlFor="description">Description:</label>
         <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
       </div>
       <div className="status_input">
-        <label for="status">Status:</label>
+        <label htmlFor="status">Status:</label>
         <select id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="pending">Pending</option>
           <option value="completed">Completed</option>

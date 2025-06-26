@@ -99,13 +99,13 @@ export default function TaskList() {
                 )}
               </td>
               <td>{task.priority}</td>
-              <td class="actions_td">
+              <td className="actions_td">
                 {editingTask === task.id ? (
-                  <button class="save_btn" onClick={() => handleUpdate(task.id)}>Save</button>
+                  <button className="save_btn" onClick={() => handleUpdate(task.id)}>Save</button>
                 ) : (
-                  <button class="edit_btn" onClick={() => handleEditClick(task)}>Edit</button>
+                  <button className="edit_btn" onClick={() => handleEditClick(task)}>Edit</button>
                 )}
-                <button class="delete_btn" onClick={() => handleDelete(task.id)}>Delete</button>
+                <button className="delete_btn" onClick={() => handleDelete(task.id)}>Delete</button>
               </td>
             </tr>
           ))}
