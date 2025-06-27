@@ -1,7 +1,11 @@
+import sys
 import os
 import sqlite3
 import pytest
 from unittest.mock import patch
+
+# Add project root to sys.path so `from app` works
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Set environment variable to use test database
 TEST_DB = 'test_tasks.db'
