@@ -4,3 +4,4 @@ flask
 flask-cors
 requests
 numpy==1.26.4
+pytest
