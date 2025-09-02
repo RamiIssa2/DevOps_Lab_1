@@ -1,4 +1,4 @@
-torch==2.2.2
+torch==2.2.2+cpu
 transformers[torch]==4.38.2
 flask
 flask-cors
