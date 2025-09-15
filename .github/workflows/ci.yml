@@ -74,7 +74,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Dockerfile       # <-- backend Dockerfile
+        file: ./backend/Dockerfile       # <-- backend Dockerfile
         push: true
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/backend:latest
