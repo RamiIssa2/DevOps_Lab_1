@@ -1,14 +1,18 @@
-# Stage 1: Build React app
-FROM node:18 AS build
+# Use an official Node image
+FROM node:18
+
+# Set working directory inside the container
 WORKDIR /app
 
+# Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps
-COPY . .
-RUN npm run build
+RUN npm install
 
-# Stage 2: Serve with nginx
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Copy the rest of the frontend code
+COPY . .
+
+# Expose React dev server port
+EXPOSE 3000
+
+# Start the React dev server
+CMD ["npm", "start"]
