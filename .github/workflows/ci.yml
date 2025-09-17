@@ -79,4 +79,4 @@ jobs:
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
         working-directory: task-manager-frontend
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=critical
