@@ -6,7 +6,10 @@ WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm config set fetch-retries 5 \
+    && npm config set fetch-retry-factor 2 \
+    && npm config set fetch-timeout 60000
+RUN npm ci --legacy-peer-deps
 
 # Copy the rest of the frontend code
 COPY . .
