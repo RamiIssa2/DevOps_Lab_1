@@ -1,21 +1,14 @@
-# Use an official Node image
-FROM node:18
-
-# Set working directory inside the container
+# Stage 1: Build React app
+FROM node:18 AS build
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package*.json ./
-RUN npm config set fetch-retries 5 \
-    && npm config set fetch-retry-factor 2 \
-    && npm config set fetch-timeout 60000
 RUN npm ci --legacy-peer-deps
-
-# Copy the rest of the frontend code
 COPY . .
+RUN npm run build
 
-# Expose React dev server port
-EXPOSE 3000
-
-# Start the React dev server
-CMD ["npm", "start"]
+# Stage 2: Serve with nginx
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

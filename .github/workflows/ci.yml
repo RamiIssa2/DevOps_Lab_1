@@ -47,19 +47,6 @@ jobs:
     - name: Run backend tests
       run: pytest tests/
 
-    # Frontend tests
-    - name: Install frontend dependencies
-      working-directory: task-manager-frontend
-      run: npm install
-
-    - name: Run frontend tests
-      working-directory: task-manager-frontend
-      run: npm test -- --watchAll=false
-
-    - name: Build frontend
-      working-directory: task-manager-frontend
-      run: npm run build
-
     - name: Cache node modules
       uses: actions/cache@v4
       with:
@@ -67,6 +54,19 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
+
+    # Frontend tests
+    - name: Install frontend dependencies
+      working-directory: task-manager-frontend
+      run: npm ci --legacy-peer-deps
+
+    - name: Run frontend tests
+      working-directory: task-manager-frontend
+      run: npm test -- --watchAll=false
+
+    - name: Build frontend (CI check only)
+      working-directory: task-manager-frontend
+      run: npm run build
 
     # Docker build & push
     - name: Set up Docker Buildx
