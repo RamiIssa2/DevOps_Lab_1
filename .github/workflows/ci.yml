@@ -47,11 +47,11 @@ jobs:
     - name: Run backend tests
       run: pytest tests/
 
-    - name: Cache node modules
+    - name: Cache frontend node_modules
       uses: actions/cache@v4
       with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        path: task-manager-frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('task-manager-frontend/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
