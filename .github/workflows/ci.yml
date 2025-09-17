@@ -15,8 +15,8 @@ jobs:
         ports: [5432:5432]
         env:
           POSTGRES_DB: testdb
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpass
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s
@@ -26,26 +26,57 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # --- Python setup & caching ---
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install backend dependencies
         run: pip install -r requirements.txt
 
-      - name: Run backend tests
-        run: pytest tests/
+      # --- Backend tests with coverage ---
+      - name: Run backend tests with coverage
+        run: |
+          pip install pytest-cov
+          pytest --cov=./ --cov-fail-under=80
 
+      # 🔒 Python security scan
+      - name: Run Bandit (Python security scan)
+        run: pip install bandit && bandit -r . -ll
+
+      # --- Node.js setup & caching ---
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install frontend dependencies
         working-directory: task-manager-frontend
         run: npm ci
 
+      # --- Frontend tests ---
       - name: Run frontend tests
         working-directory: task-manager-frontend
         run: npm test -- --watchAll=false
+
+      # 🔒 Node.js dependency security scan
+      - name: Run npm audit
+        working-directory: task-manager-frontend
+        run: npm audit --audit-level=high
