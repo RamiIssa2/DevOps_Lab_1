@@ -90,17 +90,12 @@ describe('TaskList', () => {
   });
 
   it('handles delete failure gracefully', async () => {
+    mockAxios.onDelete('/tasks/1').reply(500);
+
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
 
     fireEvent.click(screen.getByText(/delete/i));
-    const input = screen.getByDisplayValue('Task 1');
-    fireEvent.change(input, { target: { value: 'Fail Delete' } });
-
-    // Mock failure
-    mockAxios.onPut('/tasks/1').reply(500);
-
-    fireEvent.click(screen.getByText(/save/i));
 
     // Get the message "Fail Delete" since update failed
     await waitFor(() =>
