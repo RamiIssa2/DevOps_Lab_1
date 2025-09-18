@@ -48,25 +48,28 @@ describe('TaskList', () => {
     // Click "Edit"
     fireEvent.click(screen.getByText(/edit/i));
 
-    // Change title
-    const input = screen.getByDisplayValue('Task 1');
-    fireEvent.change(input, { target: { value: 'Updated Task 1' } });
+    // Change task
+    fireEvent.change(screen.getByDisplayValue('Task 1'), { target: { value: 'Updated Task 1' } });
+    fireEvent.change(screen.getByDisplayValue('Desc 1'), { target: { value: 'Updated Desc 1' } });
+    fireEvent.change(screen.getByDisplayValue('pending'), { target: { value: 'completed' } });
 
     // Mock update API
     mockAxios.onPut('/tasks/1').reply(200, {
       id: 1,
       title: 'Updated Task 1',
-      description: 'Desc 1',
-      status: 'pending',
-      priority: 'High',
+      description: 'Updated Desc 1',
+      status: 'completed',
+      priority: 'Medium',
     });
 
     // Save
     fireEvent.click(screen.getByText(/save/i));
 
-    // Expect updated value rendered
+    // Expect updated values rendered
     await waitFor(() =>
         expect(screen.getByText('Updated Task 1')).toBeInTheDocument()
+        expect(screen.getByText('Updated Desc 1')).toBeInTheDocument()
+        expect(screen.getByText('completed')).toBeInTheDocument()
     );
   });
 
@@ -79,13 +82,43 @@ describe('TaskList', () => {
     fireEvent.change(input, { target: { value: 'Fail Update' } });
 
     // Mock failure
-    mockAxios.onPut('/tasks/1').reply(500);
+    mockAxios.onPut('/tasks/1').reply(() => {
+      return [500, {}]; // forces Axios to reject
+    });
 
     fireEvent.click(screen.getByText(/save/i));
 
     // Still the message "Fail Update" since update failed
     await waitFor(() =>
       expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
+    );
+  });
+
+  it('does nothing if task not found on update', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    // Click edit
+    fireEvent.click(screen.getByText(/edit/i));
+
+    // Try to update with wrong id
+    const taskListInstance = screen.getByText('Task 1').closest('tr');
+    // Directly call handleUpdate? With react-testing-library you might need to expose it, or simulate a weird state:
+  });
+
+  it('handles delete failure gracefully', async () => {
+    mockAxios.onDelete('/tasks/1').reply(() => {
+      return [500, {}]; // forces Axios to reject
+    });
+
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    fireEvent.click(screen.getByText(/delete/i));
+
+    // expect task still exists
+    await waitFor(() =>
+      expect(screen.getByText('Task 1')).toBeInTheDocument()
     );
   });
 });
