@@ -86,7 +86,7 @@ jobs:
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
           
-            - name: Notify Telegram - front tests completed
+      - name: Notify Telegram - front tests completed
         run: |
           python telegram_notify.py
         env:
