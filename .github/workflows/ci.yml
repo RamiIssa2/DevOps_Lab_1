@@ -49,6 +49,14 @@ jobs:
           pip install pytest-cov
           pytest --cov=app --cov-report=xml
 
+      - name: Notify Telegram - backend tests completed
+        run: |
+          python telegram_notify.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "✅ Backend tests completed successfully."
+
       # 🔒 Python security scan
       - name: Run Bandit (Python security scan)
         run: pip install bandit && bandit -r . -ll
@@ -77,6 +85,14 @@ jobs:
         run: |
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
+          
+            - name: Notify Telegram - front tests completed
+        run: |
+          python telegram_notify.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "✅ Frontend tests completed successfully."
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
@@ -90,6 +106,16 @@ jobs:
           path: |
             coverage.xml
             task-manager-frontend/coverage/lcov.info
+
+      # On failure (optional)
+      - name: Notify Telegram - CI failed
+        if: failure()
+        run: |
+          python telegram_notify.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "❌ CI pipeline failed!"
 
   # --- SonarCloud analysis job ---
   sonarcloud:
