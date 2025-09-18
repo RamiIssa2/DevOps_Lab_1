@@ -46,6 +46,9 @@
     "axios-mock-adapter": "^2.1.0"
   },
   "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 80,
