@@ -46,6 +46,11 @@
     "axios-mock-adapter": "^2.1.0"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/reportWebVitals.js"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!axios)"
     ],
