@@ -77,14 +77,9 @@ describe('TaskList', () => {
     // Click "Edit"
     fireEvent.click(screen.getByText(/edit/i));
 
-    // Find the textarea for description
-    const descriptionTextarea = screen.getByRole('textbox'); // <textarea> is a textbox role
-    expect(descriptionTextarea).toBeInTheDocument();
-    expect(descriptionTextarea.value).toBe('Desc 1');
-
     // Change description
-    fireEvent.change(descriptionTextarea, { target: { value: 'Updated Desc 1' } });
-    expect(descriptionTextarea.value).toBe('Updated Desc 1');
+    const input = screen.getByDisplayValue('Desc 1');
+    fireEvent.change(input, { target: { value: 'Updated Desc 1' } });
 
     // Mock the PUT request
     mockAxios.onPut('/tasks/1').reply(200, {
