@@ -89,7 +89,7 @@ jobs:
           name: coverage-reports
           path: |
             coverage.xml
-            task-manager-frontend/coverage/lcov.info
+            coverage/lcov.info
 
   # --- SonarCloud analysis job ---
   sonarcloud:
