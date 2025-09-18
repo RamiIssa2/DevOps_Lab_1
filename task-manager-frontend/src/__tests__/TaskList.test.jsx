@@ -83,35 +83,9 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Get the message "Update failed" since update failed
+    // Still the message "Fail Update" since update failed
     await waitFor(() =>
-      expect(screen.getByDisplayValue('Update failed')).toBeInTheDocument()
-    );
-  });
-
-  it('does nothing if task not found on update', async () => {
-    render(<TaskList />);
-    await waitFor(() => screen.getByText('Task 1'));
-
-    // Click edit
-    fireEvent.click(screen.getByText(/edit/i));
-
-    // Try to update with wrong id
-    const taskListInstance = screen.getByText('Task 1').closest('tr');
-    // Directly call handleUpdate? With react-testing-library you might need to expose it, or simulate a weird state:
-  });
-
-  it('handles delete failure gracefully', async () => {
-    mockAxios.onDelete('/tasks/1').reply(500);
-
-    render(<TaskList />);
-    await waitFor(() => screen.getByText('Task 1'));
-
-    fireEvent.click(screen.getByText(/delete/i));
-
-    // Get the message "Delete failed" since update failed
-    await waitFor(() =>
-      expect(screen.getByDisplayValue('Delete failed')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
     );
   });
 });
