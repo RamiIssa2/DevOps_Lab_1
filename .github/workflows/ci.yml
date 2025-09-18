@@ -77,7 +77,6 @@ jobs:
         run: |
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
-          ls ../task-manager-frontend
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
@@ -120,7 +119,10 @@ jobs:
           path: ./coverage-reports
 
       - name: Debug coverage files
-        run: ls ./coverage-reports
+        run: |
+          ls ./coverage-reports
+          ls ./coverage-reports/task-manager-frontend
+          ls ./coverage-reports/task-manager-frontend/coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
