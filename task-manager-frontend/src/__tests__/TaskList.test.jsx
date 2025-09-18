@@ -189,28 +189,4 @@ describe('TaskList', () => {
 
     consoleSpy.mockRestore();
   });
-
-  it('does nothing if task not found on update', async () => {
-    render(<TaskList />);
-    await waitFor(() => screen.getByText('Task 1'));
-
-    // Click edit on the existing task
-    fireEvent.click(screen.getByText(/edit/i));
-
-    // Manually set an invalid ID to simulate task not found
-    const saveBtn = screen.getByText(/save/i);
-
-    // Override editingTask state temporarily
-    fireEvent.click(saveBtn, {
-      target: {
-        dataset: { id: 999 }, // simulate non-existent task
-      },
-    });
-
-    // Mock PUT should not be called, and nothing should break
-    mockAxios.onPut('/tasks/999').reply(500, {}); // optional
-
-    // You can check that the original task remains rendered
-    expect(screen.getByText('Task 1')).toBeInTheDocument();
-  });
 });

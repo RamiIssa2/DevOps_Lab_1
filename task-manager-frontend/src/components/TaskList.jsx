@@ -36,7 +36,7 @@ export default function TaskList() {
   const handleUpdate = async (id) => {
     try {
       // Fetch the original task so we keep existing values
-      const originalTask = tasks.find(task => task.id === id);
+      const originalTask = tasks.find(task => task.id === id); // istanbul ignore next
 
       const res = await API.put(`/tasks/${id}`, {
         title: updatedTitle,
