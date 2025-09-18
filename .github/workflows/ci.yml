@@ -77,7 +77,7 @@ jobs:
         run: |
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
-          ls ../
+          ls ../task-manager-frontend
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
