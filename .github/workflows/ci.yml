@@ -59,7 +59,7 @@ jobs:
           pip install pytest-cov
           pytest --cov=app --cov-report=xml
 
-      - name: Notify Telegram - backend tests completed
+      - name: Notify Telegram - Backend Tests completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -98,7 +98,7 @@ jobs:
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
           
-      - name: Notify Telegram - frontend tests completed
+      - name: Notify Telegram - Frontend Tests completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -122,7 +122,7 @@ jobs:
             task-manager-frontend/coverage/lcov.info
 
       # On failure
-      - name: Notify Telegram - CI failed
+      - name: Notify Telegram - CI - Tests failed
         if: failure()
         run: |
           python generate_ps1.py
@@ -186,8 +186,18 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Notify Telegram - SonarCloud Scan completed
+        run: |
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "✅ SonarCloud Scan completed successfully."
+
       # On failure
-      - name: Notify Telegram - CI failed
+      - name: Notify Telegram - CI - SonarCloud Scan failed
         if: failure()
         run: |
           python generate_ps1.py

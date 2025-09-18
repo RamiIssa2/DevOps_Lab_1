@@ -43,7 +43,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/backend:latest
             ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
             
-      - name: Notify Telegram - push backend image completed
+      - name: Notify Telegram - Push Backend Image completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -63,7 +63,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
-      - name: Notify Telegram - push frontend image completed
+      - name: Notify Telegram - Push Frontend Image completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -72,3 +72,15 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_MESSAGE: "✅ Frontend Docker image pushed to DockerHub successfully."
+
+      # On failure
+      - name: Notify Telegram - CD Pipeline failed
+        if: failure()
+        run: |
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "❌ CI pipeline failed!"
