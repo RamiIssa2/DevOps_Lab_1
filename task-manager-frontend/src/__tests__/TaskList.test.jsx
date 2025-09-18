@@ -75,7 +75,9 @@ describe('TaskList', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     // Mock PUT to fail
-    mockAxios.onPut('/tasks/1').reply(500);
+    mockAxios.onPut('/tasks/1').reply(() => {
+      return [500, {}]; // forces Axios to reject
+    });
 
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
