@@ -51,11 +51,13 @@ jobs:
 
       - name: Notify Telegram - backend tests completed
         run: |
-          python telegram_notify.py
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Backend tests completed successfully."
+          TELEGRAM_MESSAGE: "✅ Backend and frontend tests completed successfully."
 
       # 🔒 Python security scan
       - name: Run Bandit (Python security scan)
@@ -86,13 +88,15 @@ jobs:
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
           
-      - name: Notify Telegram - front tests completed
+      - name: Notify Telegram - frontend tests completed
         run: |
-          python telegram_notify.py
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Frontend tests completed successfully."
+          TELEGRAM_MESSAGE: "✅ Frontend and frontend tests completed successfully."
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
@@ -111,7 +115,9 @@ jobs:
       - name: Notify Telegram - CI failed
         if: failure()
         run: |
-          python telegram_notify.py
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
