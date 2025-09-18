@@ -90,4 +90,28 @@ describe('TaskList', () => {
       expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
     );
   });
+
+  it('handles delete failure gracefully', async () => {
+    mockAxios.onDelete('/tasks/1').reply(() => {
+      return [500, {}]; // forces Axios to reject
+    });
+
+    // Spy on console.error
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    fireEvent.click(screen.getByText(/delete/i));
+
+    // Wait for the async delete to finish
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Delete failed:',
+        expect.any(Error) // AxiosError
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
 });
