@@ -26,6 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Notify Telegram - CI Pipeline Started
+        run: |
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "⚙️ CI Pipeline Started."
+
       # --- Python setup & caching ---
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -111,7 +121,7 @@ jobs:
             coverage.xml
             task-manager-frontend/coverage/lcov.info
 
-      # On failure (optional)
+      # On failure
       - name: Notify Telegram - CI failed
         if: failure()
         run: |
@@ -121,7 +131,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "❌ CI pipeline failed!"
+          TELEGRAM_MESSAGE: "❌ CI pipeline - Tests failed!"
 
   # --- SonarCloud analysis job ---
   sonarcloud:
@@ -130,6 +140,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Notify Telegram - SonarCloud Scan Started
+        run: |
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "⚙️ SonarCloud Scan Started."
 
       - name: Set up JDK 17 (required for SonarScanner)
         uses: actions/setup-java@v3
@@ -165,3 +185,15 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage-reports/task-manager-frontend/coverage/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # On failure
+      - name: Notify Telegram - CI failed
+        if: failure()
+        run: |
+          python generate_ps1.py
+          pwsh -File SendMessage.ps1
+        shell: pwsh
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MESSAGE: "❌ CI pipeline - SonarCloud Scan failed!"
