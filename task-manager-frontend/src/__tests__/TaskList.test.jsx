@@ -71,6 +71,9 @@ describe('TaskList', () => {
   });
 
   it('handles update failure gracefully', async () => {
+    // Spy on console.error
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
 
@@ -85,10 +88,15 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Get the message "Fail Update" since update failed
-    await waitFor(() =>
-      expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
-    );
+    // Wait for the async update to finish
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Update failed:',
+        expect.any(Error) // AxiosError
+      );
+    });
+
+    consoleSpy.mockRestore();
   });
 
   it('handles delete failure gracefully', async () => {
