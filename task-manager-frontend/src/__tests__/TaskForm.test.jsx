@@ -39,4 +39,30 @@ describe('TaskForm', () => {
     expect(screen.getByLabelText(/title/i).value).toBe('');
     expect(screen.getByLabelText(/description/i).value).toBe('');
   });
+
+  it('shows alert and does not submit if status is invalid', async () => {
+    const onTaskCreated = jest.fn();
+    window.alert = jest.fn();
+
+    render(<TaskForm onTaskCreated={onTaskCreated} />);
+
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: 'Invalid Task' },
+    });
+    fireEvent.change(screen.getByLabelText(/description/i), {
+      target: { value: 'Bad status' },
+    });
+
+    // Force invalid status
+    fireEvent.change(screen.getByLabelText(/status/i), {
+      target: { value: 'wrong' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /add task/i }));
+
+    expect(window.alert).toHaveBeenCalledWith(
+      'Status must be "pending" or "completed".'
+    );
+    expect(onTaskCreated).not.toHaveBeenCalled();
+  });
 });

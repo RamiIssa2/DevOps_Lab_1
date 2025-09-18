@@ -40,4 +40,52 @@ describe('TaskList', () => {
       expect(screen.queryByText('Task 1')).not.toBeInTheDocument()
     );
   });
+
+  it('edits a task and saves changes', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    // Click "Edit"
+    fireEvent.click(screen.getByText(/edit/i));
+
+    // Change title
+    const input = screen.getByDisplayValue('Task 1');
+    fireEvent.change(input, { target: { value: 'Updated Task 1' } });
+
+    // Mock update API
+    mockAxios.onPut('/tasks/1').reply(200, {
+      id: 1,
+      title: 'Updated Task 1',
+      description: 'Desc 1',
+      status: 'pending',
+      priority: 'High',
+    });
+
+    // Save
+    fireEvent.click(screen.getByText(/save/i));
+
+    // Expect updated value rendered
+    await waitFor(() =>
+        expect(screen.getByText('Updated Task 1')).toBeInTheDocument()
+    );
+  });
+
+  it('handles update failure gracefully', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    fireEvent.click(screen.getByText(/edit/i));
+    const input = screen.getByDisplayValue('Task 1');
+    fireEvent.change(input, { target: { value: 'Fail Update' } });
+
+    // Mock failure
+    mockAxios.onPut('/tasks/1').reply(500);
+
+    fireEvent.click(screen.getByText(/save/i));
+
+    // Still shows old value since update failed
+    await waitFor(() =>
+      expect(screen.getByText('Task 1')).toBeInTheDocument()
+    );
+  });
 });
