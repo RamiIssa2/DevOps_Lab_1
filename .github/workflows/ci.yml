@@ -52,7 +52,6 @@ jobs:
       - name: Notify Telegram - backend tests completed
         run: |
           python generate_ps1.py
-          ls ./
           pwsh -File SendMessage.ps1
         shell: pwsh
         env:

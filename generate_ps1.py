@@ -12,7 +12,7 @@ msg_text_to_replace
 $body = @{
     chat_id = $chatId
     text = $text
-    parse_mode = "MarkdownV2"
+    parse_mode = "HTML"
 } | ConvertTo-Json
 
 Invoke-RestMethod -Uri "https://api.telegram.org/bot$token/sendMessage" `
