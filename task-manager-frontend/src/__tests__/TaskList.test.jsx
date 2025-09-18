@@ -11,7 +11,7 @@ const mockTasks = [
     title: 'Task 1',
     description: 'Desc 1',
     status: 'pending',
-    priority: 'High',
+    priority: 'Medium',
   },
 ];
 
@@ -58,7 +58,7 @@ describe('TaskList', () => {
       title: 'Updated Task 1',
       description: 'Desc 1',
       status: 'pending',
-      priority: 'High',
+      priority: 'Medium',
     });
 
     // Save
@@ -87,7 +87,7 @@ describe('TaskList', () => {
       title: 'Task 1',
       description: 'Updated Desc 1',
       status: 'pending',
-      priority: 'High',
+      priority: 'Medium',
     });
 
     // Click save
@@ -123,7 +123,7 @@ describe('TaskList', () => {
       title: 'Task 1',
       description: 'Desc 1',
       status: 'completed',
-      priority: 'High',
+      priority: 'Medium',
     });
 
     // Save
