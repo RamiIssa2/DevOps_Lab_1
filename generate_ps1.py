@@ -1,3 +1,6 @@
+import os
+
+
 def generate_ps1_file(token: str, chat_id: str, msg_text: str):
     ps1_content = r'''
 $token = "token_to_replace"
@@ -26,3 +29,11 @@ Invoke-RestMethod -Uri "https://api.telegram.org/bot$token/sendMessage" `
         file.write(ps1_content)
 
     print("✅ PowerShell script created: SendMessage.ps1")
+
+
+if __name__ == "__main__":
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    msg_text = os.getenv("TELEGRAM_MESSAGE")
+
+    generate_ps1_file(token, chat_id, msg_text)

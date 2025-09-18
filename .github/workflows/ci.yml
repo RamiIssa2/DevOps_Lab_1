@@ -58,7 +58,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Backend and frontend tests completed successfully."
+          TELEGRAM_MESSAGE: "✅ Backend tests completed successfully."
 
       # 🔒 Python security scan
       - name: Run Bandit (Python security scan)
@@ -97,7 +97,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Frontend and frontend tests completed successfully."
+          TELEGRAM_MESSAGE: "✅ Frontend tests completed successfully."
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
