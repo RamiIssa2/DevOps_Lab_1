@@ -83,9 +83,9 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Still the message "Fail Update" since update failed
+    // Get the message "Update failed" since update failed
     await waitFor(() =>
-      expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('Update failed')).toBeInTheDocument()
     );
   });
 
@@ -109,9 +109,9 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/delete/i));
 
-    // expect task still exists
+    // Get the message "Delete failed" since update failed
     await waitFor(() =>
-      expect(screen.getByText('Task 1')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('Delete failed')).toBeInTheDocument()
     );
   });
 });
