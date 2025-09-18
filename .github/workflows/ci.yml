@@ -26,16 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Notify Telegram - CI Pipeline Started
-        run: |
-          python generate_ps1.py
-          pwsh -File SendMessage.ps1
-        shell: pwsh
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "⚙️ CI Pipeline Started."
-
       # --- Python setup & caching ---
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -58,16 +48,6 @@ jobs:
         run: |
           pip install pytest-cov
           pytest --cov=app --cov-report=xml
-
-      - name: Notify Telegram - Backend Tests completed
-        run: |
-          python generate_ps1.py
-          pwsh -File SendMessage.ps1
-        shell: pwsh
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Backend tests completed successfully."
 
       # 🔒 Python security scan
       - name: Run Bandit (Python security scan)
@@ -98,7 +78,7 @@ jobs:
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
           
-      - name: Notify Telegram - Frontend Tests completed
+      - name: Notify Telegram - CI pipeline - Tests completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -106,7 +86,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Frontend tests completed successfully."
+          TELEGRAM_MESSAGE: "✅ CI pipeline - Tests completed successfully."
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
@@ -140,16 +120,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Notify Telegram - SonarCloud Scan Started
-        run: |
-          python generate_ps1.py
-          pwsh -File SendMessage.ps1
-        shell: pwsh
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "⚙️ SonarCloud Scan Started."
 
       - name: Set up JDK 17 (required for SonarScanner)
         uses: actions/setup-java@v3
@@ -186,7 +156,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Notify Telegram - SonarCloud Scan completed
+      - name: Notify Telegram - CI pipeline - SonarCloud Scan completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -194,7 +164,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ SonarCloud Scan completed successfully."
+          TELEGRAM_MESSAGE: "✅ CI pipeline - SonarCloud Scan completed successfully."
 
       # On failure
       - name: Notify Telegram - CI - SonarCloud Scan failed

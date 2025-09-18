@@ -14,16 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Notify Telegram - CD Pipeline Started
-        run: |
-          python generate_ps1.py
-          pwsh -File SendMessage.ps1
-        shell: pwsh
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "⚙️ CD Pipeline Started."
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -42,16 +32,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/backend:latest
             ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
-            
-      - name: Notify Telegram - Push Backend Image completed
-        run: |
-          python generate_ps1.py
-          pwsh -File SendMessage.ps1
-        shell: pwsh
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Backend Docker image pushed to DockerHub successfully."
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -63,7 +43,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
-      - name: Notify Telegram - Push Frontend Image completed
+      - name: Notify Telegram - Push Backend and Frontend Images completed
         run: |
           python generate_ps1.py
           pwsh -File SendMessage.ps1
@@ -71,7 +51,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: "✅ Frontend Docker image pushed to DockerHub successfully."
+          TELEGRAM_MESSAGE: "✅ Backend and Frontend Docker images pushed to DockerHub successfully."
 
       # On failure
       - name: Notify Telegram - CD Pipeline failed
