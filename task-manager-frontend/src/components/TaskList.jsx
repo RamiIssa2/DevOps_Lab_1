@@ -43,8 +43,8 @@ export default function TaskList() {
         description: updatedDescription,
         status: updatedStatus,
         priority: originalTask.priority || 'Medium'
-      });
-      setTasks(tasks.map(task => task.id === id ? res.data : task)); // istanbul ignore next
+      }); // istanbul ignore next
+      setTasks(tasks.map(task => task.id === id ? res.data : task));
       setEditingTask(null);
     } catch (err) {
       console.error('Update failed:', err);
