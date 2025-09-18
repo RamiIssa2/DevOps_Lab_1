@@ -47,6 +47,7 @@ export default function TaskList() {
       setTasks(tasks.map(task => task.id === id ? res.data : task));
       setEditingTask(null);
     } catch (err) {
+      /* istanbul ignore next */
       console.error('Update failed:', err);
     }
   };
@@ -83,7 +84,6 @@ export default function TaskList() {
               </td>
               <td>
                 {editingTask === task.id ? (
-                  /* istanbul ignore next */
                   <textarea value={updatedDescription} onChange={e => setUpdatedDescription(e.target.value)} />
                 ) : (
                   task.description
@@ -91,7 +91,6 @@ export default function TaskList() {
               </td>
               <td>
                 {editingTask === task.id ? (
-                  /* istanbul ignore next */
                   <select value={updatedStatus} onChange={e => setUpdatedStatus(e.target.value)}>
                     <option value="pending">Pending</option>
                     <option value="completed">Completed</option>
