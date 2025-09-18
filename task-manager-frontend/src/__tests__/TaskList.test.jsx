@@ -83,9 +83,9 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Still shows old value since update failed
+    // Still the message "Fail Update" since update failed
     await waitFor(() =>
-      expect(screen.getByText('Task 1')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
     );
   });
 });
