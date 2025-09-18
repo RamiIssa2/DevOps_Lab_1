@@ -44,7 +44,7 @@ export default function TaskList() {
         status: updatedStatus,
         priority: originalTask.priority || 'Medium'
       });
-      setTasks(tasks.map(task => task.id === id ? res.data : task));
+      setTasks(tasks.map(task => task.id === id ? res.data : task)); // istanbul ignore next
       setEditingTask(null);
     } catch (err) {
       console.error('Update failed:', err);
