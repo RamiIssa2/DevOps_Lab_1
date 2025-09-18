@@ -70,6 +70,40 @@ describe('TaskList', () => {
     );
   });
 
+  it('edits task description and saves changes', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    // Click "Edit"
+    fireEvent.click(screen.getByText(/edit/i));
+
+    // Find the textarea for description
+    const descriptionTextarea = screen.getByRole('textbox'); // <textarea> is a textbox role
+    expect(descriptionTextarea).toBeInTheDocument();
+    expect(descriptionTextarea.value).toBe('Desc 1');
+
+    // Change description
+    fireEvent.change(descriptionTextarea, { target: { value: 'Updated Desc 1' } });
+    expect(descriptionTextarea.value).toBe('Updated Desc 1');
+
+    // Mock the PUT request
+    mockAxios.onPut('/tasks/1').reply(200, {
+      id: 1,
+      title: 'Task 1',
+      description: 'Updated Desc 1',
+      status: 'pending',
+      priority: 'High',
+    });
+
+    // Click save
+    fireEvent.click(screen.getByText(/save/i));
+
+    // Confirm that the updated description is rendered
+    await waitFor(() =>
+      expect(screen.getByText('Updated Desc 1')).toBeInTheDocument()
+    );
+  });
+
   it('edits task status using the select dropdown', async () => {
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
