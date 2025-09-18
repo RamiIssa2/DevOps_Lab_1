@@ -74,15 +74,19 @@ describe('TaskList', () => {
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
 
-    // Click "Edit"
+    // Click Edit
     fireEvent.click(screen.getByText(/edit/i));
 
-    // Find the select element and check initial value
-    const statusSelect = screen.getByDisplayValue('pending');
+    // Find the select element
+    const statusSelect = screen.getByRole('combobox');
     expect(statusSelect).toBeInTheDocument();
+
+    // Check initial value
+    expect(statusSelect.value).toBe('pending');
 
     // Change value
     fireEvent.change(statusSelect, { target: { value: 'completed' } });
+    expect(statusSelect.value).toBe('completed');
 
     // Mock API
     mockAxios.onPut('/tasks/1').reply(200, {
