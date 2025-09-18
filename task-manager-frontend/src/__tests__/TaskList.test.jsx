@@ -70,29 +70,29 @@ describe('TaskList', () => {
     );
   });
 
-  it('handles update failure gracefully', async () => {
+  it('logs an error when update fails', async () => {
     // Spy on console.error
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    // Mock PUT to fail
+    mockAxios.onPut('/tasks/1').reply(500);
 
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
 
+    // Click edit and try to save
     fireEvent.click(screen.getByText(/edit/i));
-    const input = screen.getByDisplayValue('Task 1');
-    fireEvent.change(input, { target: { value: 'Fail Update' } });
 
-    // Mock failure
-    mockAxios.onPut('/tasks/1').reply(() => {
-      return [500, {}]; // forces Axios to reject
-    });
+    const titleInput = screen.getByDisplayValue('Task 1');
+    fireEvent.change(titleInput, { target: { value: 'Fail Update' } });
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Wait for the async update to finish
+    // Wait for the async error to be caught
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'Update failed:',
-        expect.any(Error) // AxiosError
+        expect.any(Error)
       );
     });
 
