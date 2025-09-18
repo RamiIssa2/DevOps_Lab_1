@@ -103,6 +103,23 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      - name: Install dependencies (backend)
+        run: pip install -r requirements.txt pytest pytest-cov
+
+      - name: Run Python tests with coverage
+        run: pytest --cov=app --cov-report=xml
+
+      - name: Install dependencies (frontend)
+        working-directory: task-manager-frontend
+        run: npm ci
+
+      - name: Run JS tests with coverage
+        working-directory: task-manager-frontend
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Debug coverage files
+        run: ls -R
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         with:
