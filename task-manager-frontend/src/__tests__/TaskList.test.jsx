@@ -49,9 +49,14 @@ describe('TaskList', () => {
     fireEvent.click(screen.getByText(/edit/i));
 
     // Change task
-    fireEvent.change(screen.getByDisplayValue('Task 1'), { target: { value: 'Updated Task 1' } });
-    fireEvent.change(screen.getByDisplayValue('Desc 1'), { target: { value: 'Updated Desc 1' } });
-    fireEvent.change(screen.getByDisplayValue('pending'), { target: { value: 'completed' } });
+    const taskTitleSelect = await screen.getByDisplayValue('Task 1');
+    fireEvent.change(taskTitleSelect, { target: { value: 'Updated Task 1' } });
+
+    const taskDescSelect = await screen.getByDisplayValue('Desc 1');
+    fireEvent.change(taskDescSelect, { target: { value: 'Updated Desc 1' } });
+
+    const taskStatusSelect = await screen.findByDisplayValue('pending');
+    fireEvent.change(statusSelect, { target: { value: 'completed' } });
 
     // Mock update API
     mockAxios.onPut('/tasks/1').reply(200, {
@@ -87,9 +92,7 @@ describe('TaskList', () => {
     fireEvent.change(input, { target: { value: 'Fail Update' } });
 
     // Mock failure
-    mockAxios.onPut('/tasks/1').reply(() => {
-      return [500, {}]; // forces Axios to reject
-    });
+    mockAxios.onPut('/tasks/1').reply(500, {});
 
     fireEvent.click(screen.getByText(/save/i));
 
@@ -112,9 +115,7 @@ describe('TaskList', () => {
   });
 
   it('handles delete failure gracefully', async () => {
-    mockAxios.onDelete('/tasks/1').reply(() => {
-      return [500, {}]; // forces Axios to reject
-    });
+    mockAxios.onDelete('/tasks/1').reply(500, {});
 
     render(<TaskList />);
     await waitFor(() => screen.getByText('Task 1'));
