@@ -59,18 +59,23 @@ describe('TaskList', () => {
       title: 'Updated Task 1',
       description: 'Updated Desc 1',
       status: 'completed',
-      priority: 'Medium',
+      priority: 'High',
     });
 
     // Save
     fireEvent.click(screen.getByText(/save/i));
 
-    // Expect updated values rendered
-    await waitFor(() =>
-        expect(screen.getByText('Updated Task 1')).toBeInTheDocument()
-        expect(screen.getByText('Updated Desc 1')).toBeInTheDocument()
-        expect(screen.getByText('completed')).toBeInTheDocument()
-    );
+    // Wait for the row to update and check all updated values
+    await waitFor(() => {
+      // Title
+      expect(screen.getByText('Updated Task 1')).toBeInTheDocument();
+
+      // Description
+      expect(screen.getByText('Updated Desc 1')).toBeInTheDocument();
+
+      // Status
+      expect(screen.getByText('completed')).toBeInTheDocument();
+    });
   });
 
   it('handles update failure gracefully', async () => {
