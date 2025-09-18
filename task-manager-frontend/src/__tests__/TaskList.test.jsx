@@ -83,9 +83,28 @@ describe('TaskList', () => {
 
     fireEvent.click(screen.getByText(/save/i));
 
-    // Still the message "Fail Update" since update failed
+    // Get the message "Fail Update" since update failed
     await waitFor(() =>
       expect(screen.getByDisplayValue('Fail Update')).toBeInTheDocument()
+    );
+  });
+
+  it('handles delete failure gracefully', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    fireEvent.click(screen.getByText(/delete/i));
+    const input = screen.getByDisplayValue('Task 1');
+    fireEvent.change(input, { target: { value: 'Fail Delete' } });
+
+    // Mock failure
+    mockAxios.onPut('/tasks/1').reply(500);
+
+    fireEvent.click(screen.getByText(/save/i));
+
+    // Get the message "Fail Delete" since update failed
+    await waitFor(() =>
+      expect(screen.getByDisplayValue('Fail Delete')).toBeInTheDocument()
     );
   });
 });
