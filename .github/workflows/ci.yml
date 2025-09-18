@@ -121,8 +121,6 @@ jobs:
       - name: Debug coverage files
         run: |
           ls ./coverage-reports
-          ls ./coverage-reports/task-manager-frontend
-          ls ./coverage-reports/task-manager-frontend/coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
@@ -132,6 +130,6 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.qualitygate.wait=true
             -Dsonar.python.coverage.reportPaths=coverage-reports/coverage.xml
-            -Dsonar.javascript.lcov.reportPaths=coverage-reports/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=coverage-reports/task-manager-frontend/coverage/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
