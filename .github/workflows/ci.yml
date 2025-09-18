@@ -43,11 +43,11 @@ jobs:
       - name: Install backend dependencies
         run: pip install -r requirements.txt
 
-      # --- Backend tests with coverage ---
+      # --- Backend tests with coverage (export XML for SonarCloud) ---
       - name: Run backend tests with coverage
         run: |
           pip install pytest-cov
-          pytest --cov=./ --cov-fail-under=80
+          pytest --cov=app --cov-report=xml
 
       # 🔒 Python security scan
       - name: Run Bandit (Python security scan)
@@ -71,12 +71,44 @@ jobs:
         working-directory: task-manager-frontend
         run: npm ci
 
-      # --- Frontend tests ---
-      - name: Run frontend tests
+      # --- Frontend tests with coverage (export LCOV for SonarCloud) ---
+      - name: Run frontend tests with coverage
         working-directory: task-manager-frontend
-        run: npm test -- --watchAll=false
+        run: |
+          npm test -- --coverage --watchAll=false
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
         working-directory: task-manager-frontend
         run: npm audit --audit-level=critical
+
+  # --- SonarCloud analysis job ---
+  sonarcloud:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17 (required for SonarScanner)
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.organization=${{ secrets.SONAR_ORG }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.qualitygate.wait=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
