@@ -76,7 +76,7 @@ describe('TaskList', () => {
 
     // Mock PUT to fail
     mockAxios.onPut('/tasks/1').reply(() => {
-      return [500, {}]; // forces Axios to reject
+      return Promise.reject(new Error('Forced failure'));
     });
 
     render(<TaskList />);
