@@ -47,7 +47,6 @@ export default function TaskList() {
       setTasks(tasks.map(task => task.id === id ? res.data : task));
       setEditingTask(null);
     } catch (err) {
-      /* istanbul ignore next */
       console.error('Update failed:', err);
     }
   };

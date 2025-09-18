@@ -70,6 +70,38 @@ describe('TaskList', () => {
     );
   });
 
+  it('edits task status using the select dropdown', async () => {
+    render(<TaskList />);
+    await waitFor(() => screen.getByText('Task 1'));
+
+    // Click "Edit"
+    fireEvent.click(screen.getByText(/edit/i));
+
+    // Find the select element and check initial value
+    const statusSelect = screen.getByDisplayValue('pending');
+    expect(statusSelect).toBeInTheDocument();
+
+    // Change value
+    fireEvent.change(statusSelect, { target: { value: 'completed' } });
+
+    // Mock API
+    mockAxios.onPut('/tasks/1').reply(200, {
+      id: 1,
+      title: 'Task 1',
+      description: 'Desc 1',
+      status: 'completed',
+      priority: 'High',
+    });
+
+    // Save
+    fireEvent.click(screen.getByText(/save/i));
+
+    // Confirm updated value in DOM
+    await waitFor(() =>
+      expect(screen.getByText('completed')).toBeInTheDocument()
+    );
+  });
+
   it('logs an error when update fails', async () => {
     // Spy on console.error
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
