@@ -77,6 +77,7 @@ jobs:
         run: |
           npm test -- --coverage --coverageReporters=lcov
           ls coverage/
+          ls ../
 
       # 🔒 Node.js dependency security scan
       - name: Run npm audit
@@ -89,7 +90,7 @@ jobs:
           name: coverage-reports
           path: |
             coverage.xml
-            coverage/lcov.info
+            task-manager-frontend/coverage/lcov.info
 
   # --- SonarCloud analysis job ---
   sonarcloud:
